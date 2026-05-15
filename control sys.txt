@@ -1,0 +1,102 @@
+1.)clc;
+clear;
+
+s = tf('s');
+
+G1 = 1/s^2;
+G2 = 50/(s+1);
+H1 = 2/s;
+G3 = 1/(s+1);
+G4 = 1/(s+1);
+
+% Inner feedback loop
+Geq1 = feedback(G2,H1);
+
+% Parallel blocks
+G34 = G3 + G4;
+
+% Forward path
+Gf = G1 * Geq1 * G34;
+
+% Overall closed-loop transfer function
+T = feedback(Gf,1);
+
+T
+minreal(T)
+
+
+
+2.a)clc;
+clear;
+
+s = tf('s');
+
+G = 2/(2*s + 3);
+
+Kp = 5;
+Ki = 5;
+Kd = 10;
+
+C = Kp + Ki/s + Kd*s;
+
+T = feedback(C*G,1);
+
+step(T)
+grid on
+title('Step Response for Kd = 10')
+
+
+
+3.clc;
+clear;
+
+s = tf('s');
+
+G = 1/(2*s^2 + 3*s + 2);
+
+Kp = 100;
+Ki = 180;
+Kd = 25.4;
+
+C = Kp + Ki/s + Kd*s;
+
+T = feedback(C*G,1);
+
+step(T)
+grid on
+
+info = stepinfo(T)	
+
+
+
+3.b)s = tf('s');
+
+% Plant
+G = 1 / (2*s^2 + 3*s + 2);
+
+% Corrected PID (overshoot < 10%, rise time < 0.8s)
+Kp = 12;
+Ki = 4;
+Kd = 4;
+
+C = pid(Kp, Ki, Kd);
+
+T = feedback(C*G, 1);
+
+step(T)
+grid on
+
+stepinfo(T)
+
+%QUESTION 3A % 3(a):
+% PID controller designed for:
+% Overshoot < 10 %
+% Chosen parameters: Kp = 12, Ki = 4, Kd = 4
+% From stepinfo(T): Overshoot = 3.53 %  (< 10 %)
+% → Overshoot requirement is satisfied.
+
+%QUESTION 3B % 3(b):
+% Additional requirement: Rise time < 0.8 s
+% With the same PID (Kp = 12, Ki = 4, Kd = 4):
+% From stepinfo(T): RiseTime = 0.6122 s  (< 0.8 s)
+% → Rise time requirement is satisfied.
