@@ -1,0 +1,104 @@
+1.)clc;
+clear;
+
+s = tf('s');
+
+G1 = s;
+G2 = 1/s;
+G3 = 2;
+
+H1 = s^3;
+H2 = s^4;
+
+% Inner feedback loop
+Ginner = feedback(G2*G3,H1);
+
+% Total forward path
+Gforward = G1 * Ginner;
+
+% Outer feedback loop
+T = feedback(Gforward,H2);
+
+minreal(T)
+
+
+
+2.)
+clc;
+clear;
+
+s = tf('s');
+
+G = 2/(2*s+3);
+
+Kp = 10;
+
+C = Kp;
+
+T = feedback(C*G,1);
+
+step(T)
+grid on
+title('Step Response for Kp = 10')
+
+
+3.)
+clc;
+clear;
+
+s = tf('s');
+
+G = 1/(5*s^2 + 3*s + 2);
+
+Kp = 350;
+Ki = 700;
+Kd = 70;
+
+C = Kp + Ki/s + Kd*s;
+
+T = feedback(C*G,1);
+
+step(T)
+grid on
+
+info = stepinfo(T)
+
+
+
+%testA no 3
+m = 5; b = 3; k = 2;
+G = tf(1, [m b k]);
+
+wc = 3.5;              % start a bit lower to reduce overshoot
+C = pidtune(G, 'pid', wc);
+
+T = feedback(C*G, 1);
+figure;
+step(T); grid on;
+stepinfo(T)
+C
+
+%3A WRITE IN YOUR EXAM : % G(s) = 1/(5s^2 + 3s + 2)
+%
+% PID parameters (tuned in MATLAB to meet specifications):
+% Kp = 24.2
+% Ki = 8.91
+% Kd = 16.5
+%
+% Step response meets the requirements:
+% Rise time ≈ 0.4485 s (< 0.5 s)
+% Overshoot ≈ 9.02% (< 10%)
+
+
+%3B ===================== QUESTION 3(b) =====================
+% Final PID controller parameters that satisfy the design specifications:
+%
+% Kp = 24.2
+% Ki = 8.91
+% Kd = 16.5
+%
+% Verified closed-loop performance:
+% Rise time ≈ 0.4485 s   (< 0.5 s requirement)
+% Overshoot ≈ 9.02%      (< 10% requirement)
+%
+% Therefore, the designed PID controller meets both specifications
