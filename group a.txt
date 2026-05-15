@@ -1,0 +1,64 @@
+1.)clc;
+clear;
+
+s = tf('s');
+
+G1 = s;
+G2 = 1/s;
+G3 = 2;
+
+H1 = s^3;
+H2 = s^4;
+
+% Inner feedback loop
+Ginner = feedback(G2*G3,H1);
+
+% Total forward path
+Gforward = G1 * Ginner;
+
+% Outer feedback loop
+T = feedback(Gforward,H2);
+
+minreal(T)
+
+
+
+2.)
+clc;
+clear;
+
+s = tf('s');
+
+G = 2/(2*s+3);
+
+Kp = 10;
+
+C = Kp;
+
+T = feedback(C*G,1);
+
+step(T)
+grid on
+title('Step Response for Kp = 10')
+
+
+3.)
+clc;
+clear;
+
+s = tf('s');
+
+G = 1/(5*s^2 + 3*s + 2);
+
+Kp = 350;
+Ki = 700;
+Kd = 70;
+
+C = Kp + Ki/s + Kd*s;
+
+T = feedback(C*G,1);
+
+step(T)
+grid on
+
+info = stepinfo(T)
